@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="720" height="450" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+function calculateRoot(numberRe, numberIm, rootDegree = 4, numOfIterations = 10) 
+{
+	let znRe = numberRe;
+	let znIm = numberIm;
+
+	for (let i = 0; i < numOfIterations; ++i)
+	{
+		let radius = znRe * znRe + znIm * znIm;
+		let theta = Math.atan2(znIm, znRe);
+
+		radius = Math.pow(radius, (rootDegree + 1) / 2.0)
+		theta = (rootDegree + 1) * theta;
+
+		znRe = (1 / rootDegree) * ((rootDegree + 1) * znRe - radius * Math.cos(theta));
+		znIm = (1 / rootDegree) * ((rootDegree + 1) * znIm - radius * Math.sin(theta));
+	}
+
+	return [znRe, znIm];
+}
+
+function sketchConvergence(xStart = -8/5, xEnd = 8/5, yStart = -1, yEnd = 1, xResolution = 720, yResolution = 450)
+{
+	let xSize = xEnd - xStart;
+	let ySize = yEnd - yStart;
+
+	let xIncrement = xSize / xResolution;
+	let yIncrement = ySize / yResolution;
+
+	let DIVERGENCE_COLOUR = '#000000';
+	let COLOURS = ['#EA6A47', '#1C4E80', '#DBAE58', '#B3C100'];
+	let convergence_points = [];
+    
+    let c = document.getElementById("myCanvas");
+	let ctx = c.getContext("2d");
+
+	for (let xOffset = 0; xOffset < xResolution; ++xOffset)
+	{
+		for (let yOffset = 0; yOffset < yResolution; ++yOffset)
+		{
+			let zn = calculateRoot(xStart + xOffset * xIncrement, yStart + yOffset * yIncrement);
+            
+            let re = Math.round(zn[0]);
+            let im = Math.round(zn[1]);
+            
+            if (!isFinite(zn[0]) || !isFinite(zn[1]))
+            {
+            	ctx.fillStyle = DIVERGENCE_COLOUR;
+            }
+            else if (re == 1 && im == 0) ctx.fillStyle = COLOURS[0];
+            else if (re == 0 && im == 1) ctx.fillStyle = COLOURS[1];
+            else if (re == -1 && im == 0) ctx.fillStyle = COLOURS[2];
+            else if (re == 0 && im == -1) ctx.fillStyle = COLOURS[3];
+            
+            ctx.fillRect(xOffset, yOffset, 1, 1);
+		}
+	}
+}
+
+sketchConvergence();
+</script>
+
+</body>
+</html>

@@ -20,8 +20,8 @@ def calculateRoot(number, rootDegree = 4, numberOfIterations = 40):
 	if number == 0:
 		return 0
 
-	for i in range(rootDegree):
-		xn = (1.0 / rootDegree) * ((rootDegree - 1) * xn + 1/pow(xn, rootDegree - 1))
+	for i in range(numberOfIterations):
+		xn = (1.0 / rootDegree) * ((rootDegree - 1) * xn + 1.0/pow(xn, rootDegree - 1))
 
 	return xn
 
@@ -30,15 +30,15 @@ pixels = img.load()
 
 for xOffset in range(width):
 	for yOffset in range(height):
-		xn = calculateRoot(xStart + xOffset * xIncrement + (yStart + yOffset * yIncrement)*1.0j, 4)
+		xn = calculateRoot(xStart + xOffset * xIncrement + (yStart + yOffset * yIncrement)*1.0j, 10)
 
-		r = abs(int(xn.real * 255)) % 255
-		g = abs(int(xn.imag * 255)) % 255
+		r = int((1 + xn.real) * 127)
+		g = int((1 + xn.imag) * 127)
 		b = 150
 
 		test = abs(pow(xn, 4))
 
-		if r > 255 or g > 255 or r < 0 or g < 0:# or abs(test - 1) > 1e-4:
+		if r > 255 or g > 255 or r < 0 or g < 0 or abs(test - 1) > 1e-4:
 			r = g = b = 0
 
 		pixels[xOffset, yOffset] = (r, g, b)

@@ -3,7 +3,7 @@
 from PIL import ImageDraw, ImageFont
 from FrameGenerator import FrameGenerator
 
-for rootDegree in range(4, 11):
+for rootDegree in range(4, 6):
     imgs = []
     width = 1000#4096
     height = 1000#2160
@@ -22,7 +22,7 @@ for rootDegree in range(4, 11):
         #imgs[len(imgs) - 1].save('test/test_{:d}.gif'.format(len(imgs)))
 
 
-    imgs[0].save('test/{:d}th_root.gif'.format(rootDegree),
+    imgs[0].save('img/{:d}th_root.gif'.format(rootDegree),
                  save_all=True,
                  append_images=imgs[1:],
                  duration=100,

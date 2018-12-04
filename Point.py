@@ -1,10 +1,10 @@
-from math import atan, pi
+import math
 
 class Point:
-	def __init__(self, number, rootDegree):
+	def __init__(self, number, root_degree):
 		self.number = number
-		self.rootDegree = rootDegree
-		self.currNumberOfIterations = 0
+		self.root_degree = root_degree
+		self.curr_number_of_iterations = 0
 		self.has_converged = False
 
 	def iterate(self, num_of_iterations=1):
@@ -14,21 +14,21 @@ class Point:
 			return
 
 		for i in range(num_of_iterations):
-			self.number = (1.0 / self.rootDegree) * ((self.rootDegree - 1) * self.number + 1.0/pow(self.number, self.rootDegree - 1))
-			self.currNumberOfIterations += 1
+			self.number = (1.0 / self.root_degree) * ((self.root_degree - 1) * self.number + 1.0/pow(self.number, self.root_degree - 1))
+			self.curr_number_of_iterations += 1
 			self.has_converged = self.__has_converged()
 
 			if self.has_converged:
 				break
 
 	def __has_converged(self):
-		test = abs(pow(self.number, self.rootDegree))
+		test = abs(pow(self.number, self.root_degree))
 
 		return abs(test - 1) < 1e-4
 
 	def get_color(self):
-		shade = 1 - atan(self.currNumberOfIterations / (self.rootDegree * 20)) / (pi / 2)
-		#shade = (1 - self.currNumberOfIterations/100.0) ** 2
+		shade = 1 - math.atan(self.curr_number_of_iterations / (self.root_degree * 20)) / (math.pi / 2)
+		#shade = (1 - self.curr_number_of_iterations/100.0) ** 2
 
 		r = int((1 + self.number.real) * 127 * shade)
 		g = int((1 + self.number.imag) * 127 * shade)

@@ -12,9 +12,9 @@ for rootDegree in range(4, 11):
 
 	numberOfIterations = 0
 
-	while len(fg.pointsLeft) > 4000 or fg.isFirstIteration:
+	while len(fg.points_left) > 4000 or fg.is_first_iteration:
 		imgs.append(fg.iterate(2))
-		print('Calculated {:2d}th root using {:2d} iterations ({:d} points left to converge)'.format(rootDegree, numberOfIterations, len(fg.pointsLeft)))
+		print('Calculated {:2d}th root using {:2d} iterations ({:d} points left to converge)'.format(rootDegree, numberOfIterations, len(fg.points_left)))
 		numberOfIterations += 2
 
 		draw = ImageDraw.Draw(imgs[len(imgs) - 1])

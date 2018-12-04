@@ -20,7 +20,7 @@ class FrameGenerator:
 		self.pointsLeft = []
 		self.lastImage = None
 
-	def iterate(self):
+	def iterate(self, num_of_iterations=1):
 		if self.isFirstIteration:
 			img = Image.new('RGBA', (self.width, self.height), (0, 0, 0, 255))
 			pixels = img.load()
@@ -31,14 +31,14 @@ class FrameGenerator:
 				for yOffset in range(self.height):
 					xn = Point(self.xStart + xOffset * self.xIncrement + (self.yStart + yOffset * self.yIncrement)*1.0j, self.rootDegree)
 
-					xn.iterate()
+					xn.iterate(num_of_iterations)
 
 					if not xn.has_converged:
 						self.pointsLeft.append((xOffset, yOffset, xn))
 
 					pixels[xOffset, yOffset] = xn.get_color()
 
-			self.lastImage = img
+			self.lastImage = img.copy()
 
 			return img
 		else:
@@ -46,11 +46,11 @@ class FrameGenerator:
 			pixels = img.load()
 
 			for (xOffset, yOffset, xn) in self.pointsLeft:
-				xn.iterate()
+				xn.iterate(num_of_iterations)
 
 				pixels[xOffset, yOffset] = xn.get_color()
 
 			self.pointsLeft = [(xOffset, yOffset, xn) for (xOffset, yOffset, xn) in self.pointsLeft if not xn.has_converged]
-			self.lastImage = img
+			self.lastImage = img.copy()
 
 			return img

@@ -2,55 +2,61 @@ from PIL import Image
 from Point import Point
 
 class FrameGenerator:
-	def __init__(self, root_degree=4, width=720, height=720, x_start=-1, x_end=1, y_start=-1, y_end=1):
-		self.root_degree = root_degree
-		
-		self.height = height
-		self.width = width
+    def __init__(self, root_degree=4, width=720, height=720, x_start=-1, x_end=1, y_start=-1, y_end=1):
+        self.root_degree = root_degree
 
-		self.x_start = x_start
-		self.x_end = x_end
-		self.y_start = y_start
-		self.y_end = y_end
+        self.height = height
+        self.width = width
 
-		self.xIncrement = (x_end - x_start) / width
-		self.yIncrement = (y_end - y_start) / height
+        self.x_start = x_start
+        self.x_end = x_end
+        self.y_start = y_start
+        self.y_end = y_end
 
-		self.is_first_iteration = True
-		self.points_left = []
-		self.last_image = None
+        self.x_increment = (x_end - x_start) / width
+        self.y_increment = (y_end - y_start) / height
 
-	def iterate(self, num_of_iterations=1):
-		if self.is_first_iteration:
-			img = Image.new('RGBA', (self.width, self.height), (0, 0, 0, 255))
-			pixels = img.load()
+        self.is_first_iteration = True
+        self.points_left = []
+        self.last_image = None
 
-			self.is_first_iteration = False
+    def iterate(self, num_of_iterations=1):
+        if self.is_first_iteration:
+            img = Image.new('RGB', (self.width, self.height))
+            pixels = img.load()
 
-			for xOffset in range(self.width):
-				for yOffset in range(self.height):
-					xn = Point(self.x_start + xOffset * self.xIncrement + (self.y_start + yOffset * self.yIncrement)*1.0j, self.root_degree)
+            self.is_first_iteration = False
 
-					xn.iterate(num_of_iterations)
+            for x_offset in range(self.width):
+                for y_offset in range(self.height):
+                    coord_x = self.x_start + x_offset * self.x_increment
+                    coord_y = self.y_start + y_offset * self.y_increment
 
-					if not xn.has_converged:
-						self.points_left.append((xOffset, yOffset, xn))
+                    x_n = Point(coord_x + coord_y*1j, self.root_degree)
 
-					pixels[xOffset, yOffset] = xn.get_color()
+                    x_n.iterate(num_of_iterations)
 
-			self.last_image = img.copy()
+                    if not x_n.has_converged:
+                        self.points_left.append((x_offset, y_offset, x_n))
 
-			return img
-		else:
-			img = self.last_image.copy()
-			pixels = img.load()
+                    pixels[x_offset, y_offset] = x_n.get_color()
 
-			for (xOffset, yOffset, xn) in self.points_left:
-				xn.iterate(num_of_iterations)
+            self.last_image = img.copy()
 
-				pixels[xOffset, yOffset] = xn.get_color()
+            return img
+        else:
+            img = self.last_image.copy()
+            pixels = img.load()
 
-			self.points_left = [(xOffset, yOffset, xn) for (xOffset, yOffset, xn) in self.points_left if not xn.has_converged]
-			self.last_image = img.copy()
+            for (x_offset, y_offset, x_n) in self.points_left:
+                x_n.iterate(num_of_iterations)
 
-			return img
+                pixels[x_offset, y_offset] = x_n.get_color()
+
+            self.points_left = [(x_offset, y_offset, x_n)
+                                for (x_offset, y_offset, x_n) in self.points_left
+                                if not x_n.has_converged]
+
+            self.last_image = img.copy()
+
+            return img

@@ -1,1 +1,3 @@
-# Newton-s-method-convergence
+# Newt [![Build Status](https://travis-ci.org/mlazaric/Newt.svg?branch=master)](https://travis-ci.org/mlazaric/Newt)
+
+Visualizing the basins of attraction for Newton's iterative root finding method using Python3 and the Pillow library. Made for the [DisCont mathematics 2](https://www.fer.unizg.hr/en/course/dismat2) as a project related to numerical mathematics and the methods used for fast approximations of certain functions.
